@@ -49,8 +49,8 @@ updateUser({params, body}, res) {
  })
      .catch(err => res.status(400).json(err));
 },
-deleteUsers({params}, res) {
-    Users.findOneAndDelete({_id: params.id})
+deleteUser({params}, res) {
+    User.findOneAndDelete({_id: params.id})
     .then(dbUsersData => {
         if(!dbUsersData) {
             res.status(404).json({message:"No user with matching is was found" });
