@@ -49,6 +49,18 @@ updateUser({params, body}, res) {
  })
      .catch(err => res.status(400).json(err));
 },
+deleteUsers({params}, res) {
+    Users.findOneAndDelete({_id: params.id})
+    .then(dbUsersData => {
+        if(!dbUsersData) {
+            res.status(404).json({message:"No user with matching is was found" });
+            return;
+        }
+        res.json(dbUsersData);
+    })
+    .catch(err => res.status(400).json(err));
+},
+
 addFriend({params}, res) {
     User.findOneAndUpdate({_id: params.id}, {$push: { friends: params.friendId}}, {new: true})
     .populate({path: "friends", select: ("-__v")})
