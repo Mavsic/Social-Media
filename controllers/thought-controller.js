@@ -2,15 +2,17 @@ const { User, Thought } = require("../models");
 
 const thoughtController = {
 
-    createThought({params, body}, res) {
-        Thought.create(body)
-        .then(({_id}) => {
-            return User.findOneAndUpdate({_id: params.userId}, {$push: {thought: _id}},{new: true});
+    createThought(req, res) {
+
+        Thought.create(req.body)
+        .then((data) => {
+            return User.findOneAndUpdate({_id: req.body._id}, {$addToSet: {thoughts: data._id}},{new: true});
 
         })
+
     .then(dbThoughtdata => {
         if(!dbThoughtdata) {
-            res.status(400).json({message: "No toughts were find with matching id."});
+            res.status(400).json({message: "Couldn't add the thought."});
             return;
         }
         res.json(dbThoughtdata)
@@ -20,7 +22,7 @@ const thoughtController = {
     getThought(req, res) {
         Thought.find({})
         .populate({path: "reactions", select: "-__v"})
-        .select("-__v")
+        // .select("-__v")
         .then(dbThoughtdata => res.json(dbThoughtdata))
         .catch(err => {
             console.log(err);

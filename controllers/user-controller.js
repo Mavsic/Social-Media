@@ -10,8 +10,8 @@ const userController = {
     },
     getUsers(req, res) {
         User.find({})
-        .populate({path: "thought", select: "-__v"})
-        .populate({path: "friends", slect: "-__v"})
+        // .populate({path: "thought", select: "-__v"})
+        // .populate({path: "friends", slect: "-__v"})
         .select("-__v")
         .then(dbUserdata => res.json(dbUserdata))
         .catch(err => {
@@ -22,8 +22,8 @@ const userController = {
     },
    getUserById({params}, res) {
     User.findOne({_id: params.id})
-    .populate({path: "thought", select: "-__v"})
-    .populate({path: "friends", select: "-__v"})
+    // .populate({path: "thought", select: "-__v"})
+    // .populate({path: "friends", select: "-__v"})
     .select("-__v")
     .then(dbUserdata => {
         if(!dbUserdata) {
@@ -39,7 +39,7 @@ const userController = {
    },
  
 updateUser({params, body}, res) {
-    User.findOneAndUpdate({_id: params.id}, body, {new: true, runValidators: true})
+    User.findOneAndUpdate({_id: params.id}, {$set:body}, {new: true, runValidators: true})
     .then(dbUserdata => {
         if(!dbUserdata) {
             res.status(400).json({message: "No user with matching is was found"});
